@@ -14,6 +14,8 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QWidget>
+#include <topologygenerator.h>
+#include <texteditor.h>
 
 namespace Ui {
 class GroUP;
@@ -28,8 +30,10 @@ public:
     ~GroUP();
 public slots:
     void viewStructure(QString structure);
+    void viewTrajectory(QString structure, QString trjname);
     void readViewStructure();
     void viewGraph(QString inputxvg);
+    void viewTextFile(QString filename);
 
 private slots:
     void plotup_clicked();
@@ -39,6 +43,8 @@ private slots:
     void setting_clicked();
     void gromacsAnalysis_clicked();
     void version_clicked();
+    void topologygen_clicked();
+    void textEditor_clicked();
 
 private:
     Ui::GroUP *ui;
@@ -51,6 +57,9 @@ private:
     FormSetting *settingform;
     GromacsAnalysis *gromacsAnalysisForm;
     FormVersion *versionform;
+    TopologyGenerator *gentopo;
+    TextEditor *texteditorform;
+
 };
 
 #endif // GROUP_H

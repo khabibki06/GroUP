@@ -7,6 +7,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
+
 namespace Ui {
 class GromacsAnalysis;
 }
@@ -18,6 +19,7 @@ class GromacsAnalysis : public QWidget
 public:
     explicit GromacsAnalysis(QWidget *parent = 0);
     ~GromacsAnalysis();
+    void GromacsAnalysis::setGMXExec(QString);
 
 public slots:
     void ReadAnalysis();
@@ -40,6 +42,7 @@ private:
     QString GromacsAnalysis::selectComponentEnergy();
     QProcess *ProcessAnalysis;
     bool GromacsAnalysis::checkEmptyParameter(QString text, QString label);
+    QString gmxExec;
 
 };
 

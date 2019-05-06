@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>815</width>
+    <width>856</width>
     <height>681</height>
    </rect>
   </property>
@@ -140,7 +140,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>7</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="SimulationOptionTime_tab">
     <attribute name="title">
@@ -164,7 +164,7 @@
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>275</width>
+       <width>311</width>
        <height>74</height>
       </rect>
      </property>
@@ -172,7 +172,7 @@
       <item row="0" column="0">
        <widget class="QLabel" name="label_14">
         <property name="text">
-         <string>number of steps  : </string>
+         <string>number of steps                  : </string>
         </property>
        </widget>
       </item>
@@ -192,7 +192,7 @@
       <item row="1" column="0">
        <widget class="QLabel" name="label_26">
         <property name="text">
-         <string>time steps (ps)    : </string>
+         <string>time steps (ps)                    : </string>
         </property>
        </widget>
       </item>
@@ -213,14 +213,21 @@
        </widget>
       </item>
       <item row="2" column="0">
-       <widget class="QLabel" name="label_31">
+       <widget class="QLabel" name="simulationLenght_label">
         <property name="text">
-         <string>Length of Simulations (ns) : </string>
+         <string>Length of Simulations (ns)  : </string>
         </property>
        </widget>
       </item>
       <item row="2" column="1">
-       <widget class="QLineEdit" name="simulationtime_lineEdit"/>
+       <widget class="QLineEdit" name="simulationtime_lineEdit">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </widget>
@@ -546,12 +553,12 @@
        <widget class="QComboBox" name="constraints_comboBox">
         <item>
          <property name="text">
-          <string> h-bonds</string>
+          <string>all-bonds</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>all-bonds</string>
+          <string> h-bonds</string>
          </property>
         </item>
         <item>
@@ -617,14 +624,14 @@
        <x>10</x>
        <y>30</y>
        <width>241</width>
-       <height>100</height>
+       <height>126</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout_8">
       <item row="0" column="0">
        <widget class="QLabel" name="label_51">
         <property name="text">
-         <string>Coordinates           : </string>
+         <string>Coordinates                      : </string>
         </property>
        </widget>
       </item>
@@ -640,14 +647,14 @@
          <number>500</number>
         </property>
         <property name="value">
-         <number>500</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QLabel" name="label_52">
         <property name="text">
-         <string>Velocity                  : </string>
+         <string>Velocity                             : </string>
         </property>
        </widget>
       </item>
@@ -663,14 +670,14 @@
          <number>500</number>
         </property>
         <property name="value">
-         <number>500</number>
+         <number>0</number>
         </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="label_64">
         <property name="text">
-         <string>Energy                    : </string>
+         <string>Energy                              : </string>
         </property>
        </widget>
       </item>
@@ -693,7 +700,7 @@
       <item row="3" column="0">
        <widget class="QLabel" name="label_65">
         <property name="text">
-         <string>Log                         : </string>
+         <string>Log                                   : </string>
         </property>
        </widget>
       </item>
@@ -713,7 +720,55 @@
         </property>
        </widget>
       </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Coordinates Compressed :</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1">
+       <widget class="QSpinBox" name="ntxoutCompressed_spinBox">
+        <property name="alignment">
+         <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+        </property>
+        <property name="maximum">
+         <number>1000000</number>
+        </property>
+        <property name="singleStep">
+         <number>500</number>
+        </property>
+        <property name="value">
+         <number>500</number>
+        </property>
+       </widget>
+      </item>
      </layout>
+    </widget>
+    <widget class="QTextEdit" name="textEdit">
+     <property name="geometry">
+      <rect>
+       <x>280</x>
+       <y>30</y>
+       <width>331</width>
+       <height>121</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+     <property name="html">
+      <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-weight:600;&quot;&gt;Hint:&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;1. This setting for controlling interval time the outpul file saved. &lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;2. Coordinate compressed  will produce *.xtc trajectory&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;3. Energy (nstenergy) will produce *.edr energy file for analsysis&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;4. Setting coordinate (ntsxout) and velocity (ntsvout)= 0 will suppress very bulky .trr file output.&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;5. The .trr file usually is not required except for high precsion analysis. ie for entropy.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="SimulationOptionThermostat_tab">
@@ -1179,22 +1234,15 @@
      <rect>
       <x>10</x>
       <y>30</y>
-      <width>291</width>
-      <height>74</height>
+      <width>341</width>
+      <height>100</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
      <item row="0" column="0">
       <widget class="QLabel" name="coordinate_label_2">
        <property name="text">
-        <string>Coordinate             :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="coordinate_lineEdit">
-       <property name="readOnly">
-        <bool>true</bool>
+        <string>Coordinate (*.gro; *.pdb)  :</string>
        </property>
       </widget>
      </item>
@@ -1205,15 +1253,8 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="topology_label_2">
-       <property name="text">
-        <string>Topology               :</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="topology_lineEdit">
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="coordinate_lineEdit">
        <property name="readOnly">
         <bool>true</bool>
        </property>
@@ -1226,10 +1267,24 @@
        </property>
       </widget>
      </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="topology_lineEdit">
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="topology_label_2">
+       <property name="text">
+        <string>Topology   (*.top)               :</string>
+       </property>
+      </widget>
+     </item>
      <item row="2" column="0">
       <widget class="QLabel" name="binary_label_2">
        <property name="text">
-        <string>Binary Input         :</string>
+        <string>Binary Input   (*.tpr)          :</string>
        </property>
       </widget>
      </item>
@@ -1248,6 +1303,23 @@
        <property name="enabled">
         <bool>false</bool>
        </property>
+       <property name="text">
+        <string>...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="checkPoint_Label">
+       <property name="text">
+        <string>Check Point (*.cpt)           :</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="checkpoint_lineEdit"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QToolButton" name="checkpoint_toolButton">
        <property name="text">
         <string>...</string>
        </property>
@@ -1292,18 +1364,18 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>690</x>
-     <y>60</y>
-     <width>98</width>
+     <x>691</x>
+     <y>80</y>
+     <width>153</width>
      <height>341</height>
     </rect>
    </property>
-   <layout class="QVBoxLayout" name="verticalLayout_2">
+   <layout class="QVBoxLayout" name="verticalLayout">
     <item>
      <widget class="QPushButton" name="createInputfile_pushButton">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="autoFillBackground">
@@ -1326,9 +1398,12 @@
     </item>
     <item>
      <widget class="QPushButton" name="viewInputfile_pushButton">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="autoFillBackground">
@@ -1353,7 +1428,7 @@
      <widget class="QPushButton" name="runSimulation_pushButton">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>11</pointsize>
        </font>
       </property>
       <property name="text">
@@ -1364,6 +1439,9 @@ Simulation</string>
     </item>
     <item>
      <widget class="QPushButton" name="ViewOutputSimulation_pushButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
       <property name="sizePolicy">
        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
         <horstretch>0</horstretch>
@@ -1376,8 +1454,25 @@ Simulation</string>
        </font>
       </property>
       <property name="text">
-       <string>View Output 
-Structure</string>
+       <string>View Output Structure
+Using VMD</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="trj_pushButton">
+      <property name="enabled">
+       <bool>true</bool>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>11</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>View and Analysis
+Trajectory using
+VMD</string>
       </property>
      </widget>
     </item>

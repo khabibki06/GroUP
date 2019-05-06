@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>458</width>
-    <height>656</height>
+    <width>598</width>
+    <height>651</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -19,29 +19,13 @@
   <property name="windowTitle">
    <string>Packmol GUI</string>
   </property>
-  <widget class="QFrame" name="frame_2">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>430</y>
-     <width>391</width>
-     <height>151</height>
-    </rect>
-   </property>
-   <property name="frameShape">
-    <enum>QFrame::StyledPanel</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Raised</enum>
-   </property>
-  </widget>
   <widget class="QTabWidget" name="tabWidget_2">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>451</width>
-     <height>661</height>
+     <width>591</width>
+     <height>551</height>
     </rect>
    </property>
    <property name="font">
@@ -135,7 +119,7 @@
          </font>
         </property>
         <property name="text">
-         <string>0.2</string>
+         <string>1.5</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -149,8 +133,8 @@
       <rect>
        <x>10</x>
        <y>100</y>
-       <width>421</width>
-       <height>261</height>
+       <width>561</width>
+       <height>361</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -193,25 +177,6 @@
       </property>
       <property name="text">
        <string>Dimmension:</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="add_pushButton">
-      <property name="geometry">
-       <rect>
-        <x>130</x>
-        <y>210</y>
-        <width>91</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string>Add 
-Molecules:</string>
       </property>
      </widget>
      <widget class="QWidget" name="layoutWidget">
@@ -299,6 +264,11 @@ Molecules:</string>
          <item>
           <property name="text">
            <string>inside box</string>
+          </property>
+         </item>
+         <item>
+          <property name="text">
+           <string>outside box</string>
           </property>
          </item>
         </widget>
@@ -439,6 +409,9 @@ Molecules:</string>
            <pointsize>10</pointsize>
           </font>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
        </item>
        <item row="1" column="3">
@@ -459,6 +432,9 @@ Molecules:</string>
           <font>
            <pointsize>10</pointsize>
           </font>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
          </property>
         </widget>
        </item>
@@ -481,64 +457,146 @@ Molecules:</string>
            <pointsize>10</pointsize>
           </font>
          </property>
+         <property name="alignment">
+          <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+         </property>
         </widget>
        </item>
       </layout>
      </widget>
+     <widget class="QTableWidget" name="tableWidget">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>210</y>
+        <width>541</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="sizeAdjustPolicy">
+       <enum>QAbstractScrollArea::AdjustToContents</enum>
+      </property>
+      <property name="selectionMode">
+       <enum>QAbstractItemView::SingleSelection</enum>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="columnCount">
+       <number>5</number>
+      </property>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+      <column/>
+     </widget>
+     <widget class="QPushButton" name="add_pushButton">
+      <property name="geometry">
+       <rect>
+        <x>450</x>
+        <y>150</y>
+        <width>91</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>10</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Add 
+Molecules</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="textEdit">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>320</y>
+        <width>491</width>
+        <height>31</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+      <property name="html">
+       <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'MS Shell Dlg 2'; font-size:12pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Left click in a molecule to select molecule&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:9pt;&quot;&gt;Right click in table to delete a molecule or clear molecules list&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <zorder>textEdit</zorder>
+     <zorder>label_4</zorder>
+     <zorder>label_10</zorder>
+     <zorder>layoutWidget</zorder>
+     <zorder>layoutWidget</zorder>
+     <zorder>add_pushButton</zorder>
+     <zorder>tableWidget</zorder>
     </widget>
-    <widget class="QTabWidget" name="output_tabWidget">
+    <widget class="QLabel" name="packmol">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>440</y>
-       <width>421</width>
-       <height>181</height>
+       <x>380</x>
+       <y>40</y>
+       <width>47</width>
+       <height>13</height>
       </rect>
      </property>
-     <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
+     <property name="text">
+      <string>TextLabel</string>
      </property>
-     <property name="currentIndex">
-      <number>0</number>
+    </widget>
+    <widget class="QPushButton" name="run_pushButton">
+     <property name="geometry">
+      <rect>
+       <x>70</x>
+       <y>470</y>
+       <width>75</width>
+       <height>40</height>
+      </rect>
      </property>
-     <widget class="QWidget" name="tab_input">
-      <attribute name="title">
-       <string>Added Molecules</string>
-      </attribute>
-      <widget class="QTextEdit" name="addedmolecules_textEdit">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>401</width>
-         <height>131</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QWidget" name="tab_log">
-      <attribute name="title">
-       <string>Packmol Log</string>
-      </attribute>
-      <widget class="QTextEdit" name="log_textEdit">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>10</y>
-         <width>401</width>
-         <height>131</height>
-        </rect>
-       </property>
-      </widget>
-     </widget>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
+      </font>
+     </property>
+     <property name="text">
+      <string>Run 
+PACKMOL</string>
+     </property>
     </widget>
     <widget class="QPushButton" name="view_pushButton">
      <property name="geometry">
       <rect>
-       <x>270</x>
-       <y>370</y>
-       <width>91</width>
-       <height>41</height>
+       <x>390</x>
+       <y>470</y>
+       <width>101</width>
+       <height>40</height>
       </rect>
      </property>
      <property name="sizePolicy">
@@ -549,31 +607,14 @@ Molecules:</string>
      </property>
      <property name="font">
       <font>
-       <pointsize>12</pointsize>
+       <pointsize>10</pointsize>
+       <weight>75</weight>
+       <bold>true</bold>
       </font>
      </property>
      <property name="text">
-      <string>View 
+      <string>View Output 
 In VMD</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="run_pushButton">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>370</y>
-       <width>91</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>12</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Run 
-PACKMOL</string>
      </property>
     </widget>
    </widget>
@@ -582,6 +623,16 @@ PACKMOL</string>
      <string>tab2</string>
     </attribute>
    </widget>
+  </widget>
+  <widget class="QTextEdit" name="log_textEdit">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>560</y>
+     <width>561</width>
+     <height>81</height>
+    </rect>
+   </property>
   </widget>
  </widget>
  <resources/>

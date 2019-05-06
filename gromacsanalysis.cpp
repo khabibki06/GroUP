@@ -1,28 +1,33 @@
 #include "gromacsanalysis.h"
 #include "ui_gromacsanalysis.h"
 
+
 GromacsAnalysis::GromacsAnalysis(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GromacsAnalysis)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Drawer);
 
     //setting analysis and output  to textviewer
     ProcessAnalysis = new QProcess(this);
     ProcessAnalysis->setProcessChannelMode(QProcess::MergedChannels);
     connect(ProcessAnalysis, SIGNAL(readyRead()), this, SLOT(ReadAnalysis()));
     connect(ProcessAnalysis, SIGNAL(finished(int,QProcess::ExitStatus)), this, SLOT(StopAnalysis(int,QProcess::ExitStatus)));
+
 }
 
 GromacsAnalysis::~GromacsAnalysis()
 {
     delete ui;
+    ProcessAnalysis->close();
+    delete ProcessAnalysis;
 }
 
 void GromacsAnalysis::on_workDir_toolButton_clicked()
 {
     QString directory = QFileDialog::getExistingDirectory(this,tr("open working directory ..."),QDir::currentPath());
+    if (directory.isEmpty())
+        return;
     QDir::setCurrent(directory);
     ui->workDir_lineEdit->setText(directory);
 }
@@ -49,7 +54,7 @@ void GromacsAnalysis::on_runEnergy_pushButton_clicked()
         return;
     QStringList command;
     command << "energy" << "-f" << ui->energyfile_lineEdit->text() << "-o" << ui->energyout_lineEdit->text();
-    ProcessAnalysis->start("gmx.exe", command);
+    ProcessAnalysis->start(gmxExec, command);
     if (ui->temperature_radioButton->isChecked())
         ProcessAnalysis->write("Temperature \n 0 \n");
     if (ui->density_radioButton->isChecked())
@@ -87,6 +92,8 @@ bool GromacsAnalysis::checkEmptyParameter(QString text, QString label)
 void GromacsAnalysis::on_energyfile_toolButton_clicked()
 {
     QString fileName = QFileDialog::getOpenFileName(this, tr("open energy  file ..."), QDir::currentPath(),tr("Energy Files (*.edr)"));
+    if (fileName.isEmpty())
+        return;
     QDir dir(QDir::currentPath());
     QString fileNameRelative = dir.relativeFilePath(fileName);
     ui->energyfile_lineEdit->setText(fileNameRelative);
@@ -103,4 +110,9 @@ void GromacsAnalysis::on_viewGraphEn_pushButton_clicked()
     else
         outenergy = ui->energyout_lineEdit->text();
     emit viewGraphSignal(outenergy);
+}
+
+void GromacsAnalysis::setGMXExec(QString gmxpath)
+{
+   gmxExec = gmxpath;
 }

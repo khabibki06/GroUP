@@ -6,7 +6,6 @@ FormVersion::FormVersion(QWidget *parent) :
     ui(new Ui::FormVersion)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Drawer);
 }
 
 FormVersion::~FormVersion()

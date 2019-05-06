@@ -1,13 +1,12 @@
 #include "gromacsup.h"
 #include "ui_gromacsup.h"
 
+
 GromacsUP::GromacsUP(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::GromacsUP)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Drawer);
-    //initiate plot from
     //default simulation widget
     defaultSimulationWidget();
 
@@ -22,11 +21,29 @@ GromacsUP::GromacsUP(QWidget *parent) :
     connect(exec, SIGNAL(finished(int QProcess::ExitStatus)), this, SLOT(StopSimulationCommand(int,QProcess::ExitStatus)));
     //---------end---------------
 
-    //set exe dir
+    //set working dir
+    if (ui->workingDir_lineEdit->text().isEmpty())
+        ui->workingDir_lineEdit->setText(QDir::current().absolutePath());
+    //validator
+    //REG VALIDATOR
+    ui->nsteps_lineEdit->setValidator(new QRegExpValidator(QRegExp("[1-9][0-9]*")));
+    ui->timeSteps_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->emtol_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->emsteps_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->nstlist_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->rcoloumb_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->rvdw_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+//    ui->taut_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+//    ui->reft_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->taup_lineEdit->setValidator(new QRegExpValidator(QRegExp("[1-9]*.?[0-9]*")));
+    ui->refp_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->SimulationVelTemp_lineEdit->setValidator(new QRegExpValidator(QRegExp("[1-9]*.?[0-9]*")));
 }
 GromacsUP::~GromacsUP()
 {
     delete ui;
+    exec->close();
+    delete exec;
 }
 void GromacsUP::defaultSimulationWidget()
 {
@@ -39,10 +56,15 @@ void GromacsUP::defaultSimulationWidget()
     ui->reference_toolButton->setDisabled(1);
     ui->binaryInput_lineEdit->setDisabled(1);
     ui->binaryInput_toolButton->setDisabled(1);
+    //enable tab
+    ui->SimulationParamater_tabWidget->setEnabled(1);
     //minimization tab is enable
     ui->SimulationOptionMinimization_tab->setEnabled(1);
     //Time Tab
     ui->timeSteps_lineEdit->setDisabled(1);
+    ui->simulationtime_lineEdit->setVisible(0);
+    ui->simulationLenght_label->setVisible(0);
+    ui->simulationtime_lineEdit->clear();
     //Continu check box
     ui->continuation_checkBox->setChecked(0);
     ui->continuation_checkBox->setDisabled(1);
@@ -57,12 +79,41 @@ void GromacsUP::defaultSimulationWidget()
     //Bonding Tab is invisible
     ui->SimulationOptionBonding_tab->setDisabled(1);
     //additional setting
-    ui->simulationtime_lineEdit->setHidden(1);
     ui->RestraintMolecules_checkBox->setDisabled(1);
     ui->RestraintMolecules_checkBox->setChecked(0);
     //Non Bonding is invisible
     ui->SimulationOptionNonBonding_tab->setEnabled(1);
+    //create and view input file is enable
+    ui->createInputfile_pushButton->setEnabled(1);
+    ui->viewInputfile_pushButton->setEnabled(1);
+    //default check point and binary is invisible and disable
+    ui->checkPoint_Label->setVisible(0);
+    ui->checkpoint_lineEdit->setVisible(0);
+    ui->checkpoint_toolButton->setVisible(0);
+    ui->binary_label_2->setVisible(0);
+    ui->binaryInput_lineEdit->setVisible(0);
+    ui->binaryInput_toolButton->setVisible(0);
+    ui->checkPoint_Label->setDisabled(1);
+    ui->checkpoint_lineEdit->setDisabled(1);
+    ui->checkpoint_toolButton->setDisabled(1);
+    ui->binary_label_2->setDisabled(1);
+    ui->binaryInput_lineEdit->setDisabled(1);
+    ui->binaryInput_toolButton->setDisabled(1);
+    //default coordinate and topology is enabled and visible
+    ui->coordinate_label_2->setVisible(1);
+    ui->coordinate_lineEdit->setVisible(1);
+    ui->coordinate_toolButton->setVisible(1);
+    ui->topology_label_2->setVisible(1);
+    ui->topology_lineEdit->setVisible(1);
+    ui->topology_toolButton->setVisible(1);
+    ui->coordinate_label_2->setEnabled(1);
+    ui->coordinate_lineEdit->setEnabled(1);
+    ui->coordinate_toolButton->setEnabled(1);
+    ui->topology_label_2->setEnabled(1);
+    ui->topology_lineEdit->setEnabled(1);
+    ui->topology_toolButton->setEnabled(1);
 }
+
 void GromacsUP::changeEnsemble()
 {
     QString ensemble = ui->ensemble_comboBox->currentText();
@@ -86,18 +137,37 @@ void GromacsUP::changeFileSimulationWidget()
     }
     else if (selectedType == "Extending Simulation")
     {
-        defaultSimulationWidget();
+        ui->SimulationParamater_tabWidget->setDisabled(1);
+        ui->ensemble_comboBox->setDisabled(1);
+        //create input file is disable
+        ui->createInputfile_pushButton->setDisabled(1);
+        ui->viewInputfile_pushButton->setDisabled(1);
+        //enable dan make visible binary and checkpoint file
+        ui->checkPoint_Label->setVisible(1);
+        ui->checkpoint_lineEdit->setVisible(1);
+        ui->checkpoint_toolButton->setVisible(1);
+        ui->binary_label_2->setVisible(1);
+        ui->binaryInput_lineEdit->setVisible(1);
+        ui->binaryInput_toolButton->setVisible(1);
+        ui->checkPoint_Label->setEnabled(1);
+        ui->checkpoint_lineEdit->setEnabled(1);
+        ui->checkpoint_toolButton->setEnabled(1);
+        ui->binary_label_2->setEnabled(1);
         ui->binaryInput_lineEdit->setEnabled(1);
         ui->binaryInput_toolButton->setEnabled(1);
-        ui->SimulationOptionMinimization_tab->setDisabled(1);
+        //disable and make invisible coordinate and topology
+        ui->coordinate_label_2->setVisible(0);
+        ui->coordinate_lineEdit->setVisible(0);
+        ui->coordinate_toolButton->setVisible(0);
+        ui->topology_label_2->setVisible(0);
+        ui->topology_lineEdit->setVisible(0);
+        ui->topology_toolButton->setVisible(0);
+        ui->coordinate_label_2->setDisabled(1);
         ui->coordinate_lineEdit->setDisabled(1);
         ui->coordinate_toolButton->setDisabled(1);
+        ui->topology_label_2->setDisabled(1);
         ui->topology_lineEdit->setDisabled(1);
         ui->topology_toolButton->setDisabled(1);
-        ui->frame_ensemble->setDisabled(1);
-        ui->continuation_checkBox->setDisabled(1);
-        ui->timeSteps_lineEdit->setVisible(0);
-        ui->SimulationOptionNonBonding_tab->setDisabled(1);
 
     }
     else {
@@ -114,6 +184,10 @@ void GromacsUP::changeFileSimulationWidget()
         changeEnsemble();
         ui->RestraintMolecules_checkBox->setEnabled(1);
         ui->SimulationOptionOutput_tab->setEnabled(1);
+        //show total simulation time in ns
+        ui->simulationtime_lineEdit->setVisible(1);
+        ui->simulationLenght_label->setVisible(1);
+        calculateSimulationTime();
     }
 }
 //-----------open coordinate File -----------------
@@ -164,10 +238,19 @@ QString GromacsUP::ExecDir()
 
 void GromacsUP::createSimulationInputFile()
 {
-    ui->outputDiplay_textEdit->append("Creating Input File.......");
+    ui->outputDiplay_textEdit->append("--------------Creating Input File----------------");
     QString modeMD = ui->simulationType_comboBox->currentText();
     QString fileName = ui->jobName_lineEdit->text() + ".mdp";
     QFile file(fileName);
+    if (file.exists())
+    {
+        QMessageBox::StandardButton message = QMessageBox::question(this,"Warning", fileName + " is exist. Do you want to overwrite it?",QMessageBox::Yes|QMessageBox::No);
+        if (message == QMessageBox::No)
+        {
+            ui->outputDiplay_textEdit->append("-----------Process is aborted by user--------------");
+            return;
+        }
+    }
     if (file.open(QFile::WriteOnly | QIODevice::Text))
     {
         QTextStream out(&file);
@@ -192,6 +275,11 @@ void GromacsUP::createSimulationInputFile()
             out << "nstvout            = " << ui->nstvout_spinBox->text()<<endl;
             out << "nstenergy          = " << ui->nstenergy_spinBox->text()<<endl;
             out << "nstlog            = " << ui->nstlog_spinBox->text()<<endl;
+            if (ui->ntxoutCompressed_spinBox->text().toInt() != 0)
+            {
+                out << "nstxout-compressed = " << ui->ntxoutCompressed_spinBox->text() << endl;
+                out << "compressed-x-grps  = System " << endl;
+            }
         }
         out << ";-------------------Bonds Parameter --------------------"<<endl;
         if (ui->continuation_checkBox->isChecked() && ui->continuation_checkBox->isEnabled())
@@ -199,13 +287,17 @@ void GromacsUP::createSimulationInputFile()
             out << "continuation            = yes " <<endl;
             out << "gen_vel                 = no " <<endl;
         }
-        else {
-            out << "continuation            = no " <<endl;
-            out << "gen_vel                 = yes" <<endl;
-            if (ui->SimulationVelTemp_lineEdit->text().isEmpty())
-                out << "gen_vel                 = 300 " <<endl;
-            else
-                out << "gen_temp                = " << ui->SimulationVelTemp_lineEdit->text()<<endl;;
+        else
+        {
+            if (ui->simulationType_comboBox->currentText() != "Minimization")
+            {
+                out << "continuation            = no " <<endl;
+                out << "gen_vel                 = yes" <<endl;
+                //            if (ui->SimulationVelTemp_lineEdit->text().isEmpty())
+                //                out << "gen_vel                 = 300 " <<endl;
+                //            else
+                //                out << "gen_temp                = " << ui->SimulationVelTemp_lineEdit->text()<<endl;
+            }
         }
         if (ui->SimulationOptionBonding_tab->isEnabled())
         {
@@ -264,11 +356,46 @@ QStringList GromacsUP::RunGROMPP()
         cmdcommand << "-r" << ui->reference_lineEdit->text();
     return cmdcommand;
 }
+QStringList GromacsUP::RunConvertTpr()
+{
+    QString tprfile = ui->jobName_lineEdit->text() + ".tpr";
+    QStringList cmdcommand;
+    cmdcommand.clear();
+    QDialog * dialog = new QDialog();
+    QHBoxLayout *hbox = new QHBoxLayout();
+    QComboBox *comboMode = new QComboBox();
+    comboMode->addItems(QStringList() << "extend (ps)" << "until (ps)" << "nsteps");
+    comboMode->setEditable(false);
+    comboMode->setAcceptDrops(false);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    connect(buttonBox, SIGNAL(accepted()),dialog, SLOT(accept()));
+    connect(buttonBox, SIGNAL(rejected()), dialog, SLOT(reject()));
+    QLineEdit *time_Line = new QLineEdit();
+    hbox->addWidget(comboMode);
+    hbox->addWidget(time_Line);
+    hbox->addWidget(buttonBox);
+    dialog->setLayout(hbox);
+    int result = dialog->exec();
+    if (result == QDialog::Accepted)
+    {
+        cmdcommand << "convert-tpr" << "-s" << ui->binaryInput_lineEdit->text();
+        if (comboMode->currentText() == "extend (ps)")
+            cmdcommand << "-extend";
+        else if (comboMode->currentText() == "until (ps)")
+            cmdcommand << "-until";
+        else
+            cmdcommand << "-nsteps";
+        cmdcommand << time_Line->text() << "-o" << tprfile;
+    }
+    return cmdcommand;
+}
 
 QStringList GromacsUP::RunMdrun()
 {
-    QStringList cmdcommand;
+    QStringList cmdcommand;      
     cmdcommand << "mdrun" << "-v" << "-deffnm" << ui->jobName_lineEdit->text();
+    if (ui->simulationType_comboBox->currentText() == "Extending Simulation")
+        cmdcommand << "-cpi" << ui->checkpoint_lineEdit->text();
     return cmdcommand;
 }
 
@@ -318,7 +445,8 @@ void GromacsUP::on_workingDir_toolButton_clicked()
 void GromacsUP::on_coordinate_toolButton_clicked()
 {
     QString filename = OpenCoordinateFile();
-    ui->coordinate_lineEdit->setText(filename);
+    if (!filename.isEmpty())
+        ui->coordinate_lineEdit->setText(filename);
 }
 
 void GromacsUP::on_topology_toolButton_clicked()
@@ -326,7 +454,8 @@ void GromacsUP::on_topology_toolButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, tr("open topology file ..."), QDir::currentPath(),tr("Topology Files (*.top)"));
     QDir dir(QDir::currentPath());
     QString fileNameRelative = dir.relativeFilePath(fileName);
-    ui->topology_lineEdit->setText(fileNameRelative);
+    if (!fileName.isEmpty())
+        ui->topology_lineEdit->setText(fileNameRelative);
 }
 
 void GromacsUP::on_reference_toolButton_clicked()
@@ -334,7 +463,8 @@ void GromacsUP::on_reference_toolButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, tr("open restraint coordinate file ..."), QDir::currentPath(),tr("Coordinate Files (*.gro *.pdb)"));
     QDir dir(QDir::currentPath());
     QString fileNameRelative = dir.relativeFilePath(fileName);
-    ui->reference_lineEdit->setText(fileNameRelative);
+    if (!fileName.isEmpty())
+        ui->reference_lineEdit->setText(fileNameRelative);
 }
 
 void GromacsUP::on_binaryInput_toolButton_clicked()
@@ -342,7 +472,8 @@ void GromacsUP::on_binaryInput_toolButton_clicked()
     QString fileName = QFileDialog::getOpenFileName(this, tr("open gromacs binary input file ..."), QDir::currentPath(),tr("Binary Gromacs Files (*.tpr)"));
     QDir dir(QDir::currentPath());
     QString fileNameRelative = dir.relativeFilePath(fileName);
-    ui->binaryInput_lineEdit ->setText(fileNameRelative);
+    if (!fileName.isEmpty())
+        ui->binaryInput_lineEdit ->setText(fileNameRelative);
 }
 
 void GromacsUP::on_createInputfile_pushButton_clicked()
@@ -350,13 +481,12 @@ void GromacsUP::on_createInputfile_pushButton_clicked()
     if (checkErrorMessage(ui->jobName_lineEdit->text(), "JOBNAME "))
         return;
     createSimulationInputFile();
+    ui->viewInputfile_pushButton->setEnabled(1);
 }
 
 void GromacsUP::on_nsteps_lineEdit_textChanged(const QString &arg1)
 {
-    ui->nsteps_lineEdit->setValidator(new QIntValidator());
-    int totalTime = ui->nsteps_lineEdit->text().toInt() * ui->timeSteps_lineEdit->text().toInt()/1000;
-    ui->simulationtime_lineEdit->setText(QString::number(totalTime));
+    calculateSimulationTime();
 }
 
 void GromacsUP::on_tcoupl_comboBox_currentTextChanged(const QString &arg1)
@@ -376,9 +506,7 @@ void GromacsUP::on_tcoupl_comboBox_currentTextChanged(const QString &arg1)
 
 void GromacsUP::on_viewInputfile_pushButton_clicked()
 {
-    QString cmdcommand = "notepad.exe " + ui->jobName_lineEdit->text() + ".mdp";
-    QProcess *process = new QProcess(this);
-    process->start(cmdcommand);
+    emit viewInputFile(ui->jobName_lineEdit->text() + ".mdp");
 }
 
 
@@ -386,23 +514,45 @@ void GromacsUP::RunSimulationCommand()
 {
     if (checkErrorMessage(ui->jobName_lineEdit->text(), "JOBNAME "))
         return;
-    if (checkErrorMessage(ui->coordinate_lineEdit->text(), "Coordinate File "))
-        return;
-    if (checkErrorMessage(ui->topology_lineEdit->text(), "Topology File "))
-        return;
-    if (ui->RestraintMolecules_checkBox->isChecked())
+    if (ui->simulationType_comboBox->currentText() == "Extending Simulation")
     {
-        if (checkErrorMessage(ui->reference_lineEdit->text(), "Reference Coordinate "))
+        if (checkErrorMessage(ui->binaryInput_lineEdit->text(), "Binary "))
             return;
-    }
-    if (QFile::exists(ui->jobName_lineEdit->text() + ".mdp"))
-    {
-
+        if (checkErrorMessage(ui->checkpoint_lineEdit->text(), "Checkpoint "))
+            return;
+        //running gmx convert tpr
+        QStringList commandList = RunConvertTpr();
+        if (!commandList.isEmpty())
+        {
+            ui->outputDiplay_textEdit->append("--------running Gromacs Convert Tpr-----------------");
+            exec->start(gmxExec, commandList);
+        } else
+            return;
     } else
-        createSimulationInputFile();
-    exec->start("gmx.exe", RunGROMPP() );
+    {
+        if (checkErrorMessage(ui->coordinate_lineEdit->text(), "Coordinate File "))
+            return;
+        if (checkErrorMessage(ui->topology_lineEdit->text(), "Topology File "))
+            return;
+        if (ui->RestraintMolecules_checkBox->isChecked())
+        {
+            if (checkErrorMessage(ui->reference_lineEdit->text(), "Reference Coordinate "))
+                return;
+        }
+        if (!QFile::exists(ui->jobName_lineEdit->text() + ".mdp"))
+            createSimulationInputFile();
+        //running GROMPP
+        ui->outputDiplay_textEdit->append("--------running GROMPP-----------------");
+        exec->start(gmxExec, RunGROMPP() );
+    }
     exec->waitForFinished();
-    exec->start("gmx.exe", RunMdrun());
+    if(QFile::exists(ui->jobName_lineEdit->text() + ".tpr"))
+    {
+        ui->outputDiplay_textEdit->append("--------running MDRUN-----------------");
+        exec->start(gmxExec, RunMdrun());
+    }
+    else
+        ui->outputDiplay_textEdit->append("------------there is an error. Process is aborted--------------");
 }
 void GromacsUP::ReadSimulationCommand()
 {
@@ -411,9 +561,8 @@ void GromacsUP::ReadSimulationCommand()
 
 void GromacsUP::StopSimulationCommand(int exitCode, QProcess::ExitStatus exitStatus)
 {
-
+    ui->outputDiplay_textEdit->append("\n -------------------------- \n Simulation is finished \n ---------------------");
 }
-
 
 void GromacsUP::on_RestraintMolecules_checkBox_clicked()
 {
@@ -422,11 +571,13 @@ void GromacsUP::on_RestraintMolecules_checkBox_clicked()
         ui->reference_lineEdit->setEnabled(1);
         ui->reference_toolButton->setEnabled(1);
         ui->reference_label->setEnabled(1);
+        ui->reference_lineEdit->setText(ui->coordinate_lineEdit->text());
     } else
     {
         ui->reference_lineEdit->setDisabled(1);
         ui->reference_toolButton->setDisabled(1);
         ui->reference_label->setDisabled(1);
+        ui->reference_lineEdit->clear();
     }
 }
 
@@ -442,4 +593,74 @@ void GromacsUP::on_continuation_checkBox_clicked()
 void GromacsUP::on_ViewOutputSimulation_pushButton_clicked()
 {
     emit viewStructureSignal(ui->jobName_lineEdit->text() + ".gro");
+}
+
+void GromacsUP::setGMXExec(QString gmxexec)
+{
+//    ui->GMX->setText(gmxexec);
+//    gmxExec->clear();
+//    gmxExec->to
+    gmxExec = gmxexec;
+}
+
+
+void GromacsUP::on_trj_pushButton_clicked()
+{
+    if (QFile(ui->jobName_lineEdit->text() + ".xtc").exists())
+        emit viewTrajectorySignal(ui->jobName_lineEdit->text() + ".gro",ui->jobName_lineEdit->text() + ".xtc");
+    else if(QFile(ui->jobName_lineEdit->text() + ".trr").exists())
+        emit viewTrajectorySignal(ui->jobName_lineEdit->text() + ".gro",ui->jobName_lineEdit->text() + ".trr");
+    else
+    {
+        QMessageBox msgBox;
+        msgBox.setIcon(QMessageBox::Critical);
+        msgBox.setText("trajectory file isn't exist");
+        msgBox.exec();
+    }
+}
+
+void GromacsUP::on_jobName_lineEdit_textChanged(const QString &arg1)
+{
+
+}
+
+void GromacsUP::on_jobName_lineEdit_textEdited(const QString &arg1)
+{
+    QFile inputfile(ui->jobName_lineEdit->text() + ".mdp");
+    if (inputfile.exists())
+        ui->viewInputfile_pushButton->setEnabled(1);
+    else
+        ui->viewInputfile_pushButton->setDisabled(1);
+    //set view structure button enable or disable
+//    QFile outputfile(ui->jobName_lineEdit->text() + ".gro");
+//    if (outputfile.exists())
+//        ui->ViewOutputSimulation_pushButton->setEnabled(1);
+//    else
+//        ui->ViewOutputSimulation_pushButton->setDisabled(1);
+//    //set view trj button
+//    QFile outputtrj(ui->jobName_lineEdit->text() + ".trr");
+//    if (outputtrj.exists() && outputfile.exists())
+//        ui->trj_pushButton->setEnabled(1);
+//    else
+//        ui->trj_pushButton->setDisabled(1);
+}
+
+void GromacsUP::on_timeSteps_lineEdit_textChanged(const QString &arg1)
+{
+    calculateSimulationTime();
+}
+
+void GromacsUP::calculateSimulationTime()
+{
+    double totalTime = ui->nsteps_lineEdit->text().toDouble() * ui->timeSteps_lineEdit->text().toDouble()/1000;
+    ui->simulationtime_lineEdit->setText(QString::number(totalTime));
+}
+
+void GromacsUP::on_checkpoint_toolButton_clicked()
+{
+    QString fileName = QFileDialog::getOpenFileName(this, tr("open gromacs checkpoint file ..."), QDir::currentPath(),tr("Checkpoint Gromacs Files (*.cpt)"));
+    QDir dir(QDir::currentPath());
+    QString fileNameRelative = dir.relativeFilePath(fileName);
+    if (!fileName.isEmpty())
+        ui->checkpoint_lineEdit->setText(fileNameRelative);
 }

@@ -53,7 +53,6 @@ private:
     bool GromacsPrep::checkEmptyParameter(QString text, QString label);
     QProcess *PreparationExec;
     QString GromacsPrep::ExecDir();
-    QString gmxExec, gmxLib;
 };
 
 #endif // GROMACSPREP_H

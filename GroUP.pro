@@ -33,7 +33,10 @@ SOURCES += main.cpp\
     gromacsup.cpp \
     gromacsanalysis.cpp \
     formsetting.cpp \
-    formversion.cpp
+    formversion.cpp \
+    topologygenerator.cpp \
+    texteditor.cpp \
+    source/dataplot.cpp
 
 HEADERS  += group.h \
     formplot.h \
@@ -43,7 +46,10 @@ HEADERS  += group.h \
     gromacsup.h \
     gromacsanalysis.h \
     formsetting.h \
-    formversion.h
+    formversion.h \
+    topologygenerator.h \
+    texteditor.h \
+    source/dataplot.h
 
 FORMS    += group.ui \
     formplot.ui \
@@ -52,4 +58,9 @@ FORMS    += group.ui \
     gromacsup.ui \
     gromacsanalysis.ui \
     formsetting.ui \
-    formversion.ui
+    formversion.ui \
+    topologygenerator.ui \
+    texteditor.ui
+
+win32:RC_ICONS += group.ico
+

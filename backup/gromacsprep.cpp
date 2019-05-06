@@ -15,7 +15,7 @@ GromacsPrep::GromacsPrep(QWidget *parent) :
 
     //dummy line edit for gmxexec and gmxlib
    // ui->gmxlib->setVisible(0);
-//    ui->gmxexec->setVisible(0);
+    ui->gmxexec->setVisible(0);
 
     //FF load
 //    createFFList();
@@ -26,16 +26,6 @@ GromacsPrep::GromacsPrep(QWidget *parent) :
     //validator
     ui->BiomolSaltConc_lineEdit_2->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
     ui->Distance_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
-    //set layout
-    // QGridLayout *newlayout = new QGridLayout;
-    // newlayout->addWidget(ui->jobnameLabel,0,0,2,1);
-    // newlayout->addWidget(ui->initialStructureLabel,1,0,2,1);
-    // newlayout->addWidget(ui->JobName_lineEdit,0,2,5,1);
-    // newlayout->addWidget(ui->Coordinate_lineEdit,1,2,5,1);
-    // newlayout->addWidget(ui->Coordinate_toolButton,1,7);
-    // setLayout(newlayout);
-
-
 }
 
 GromacsPrep::~GromacsPrep()
@@ -47,7 +37,7 @@ GromacsPrep::~GromacsPrep()
 
 void GromacsPrep::createFFList()
 {
-    QDir ff_path(gmxLib);
+    QDir ff_path(ui->gmxlib->text());
     QStringList ff = ff_path.entryList(QDir::Dirs);
     ff.removeAt(1);
     ff.removeAt(0);
@@ -124,6 +114,8 @@ bool GromacsPrep::checkEmptyParameter(QString text, QString label)
 void GromacsPrep::on_RunPrepare_pushButton_clicked()
 {
     ui->Output_textEdit->append("-----------please wait--------------");
+    //GMX EXEC
+    QString GMXEXEC = ui->gmxexec->text();
     if (checkEmptyParameter(ui->JobName_lineEdit->text(), "JOBNAME"))
         return;
     if (checkEmptyParameter(ui->Coordinate_lineEdit->text(), "Initial Structure"))
@@ -140,17 +132,17 @@ void GromacsPrep::on_RunPrepare_pushButton_clicked()
         runcommand <<  "-f" << "temp.pdb";
     else
         runcommand <<  "-f" << ui->Coordinate_lineEdit->text();
-    PreparationExec->start(gmxExec, runcommand);
+    PreparationExec->start(GMXEXEC, runcommand);
     PreparationExec->waitForFinished();
     if (ui->SolvateYES_radioButton->isChecked())
     {
         runcommand.clear();
         runcommand << "editconf" << "-f" << coordinate_out << "-o" << coordinate_out << "-c" << "-d" << ui->Distance_lineEdit->text() << "-bt" << "cubic";
-        PreparationExec->start(gmxExec, runcommand);
+        PreparationExec->start(GMXEXEC, runcommand);
         PreparationExec->waitForFinished();
         runcommand.clear();
         runcommand << "solvate" << "-cp" << coordinate_out << "-cs" << "spc216.gro" << "-o" << coordinate_out << "-p" << topology_out;
-        PreparationExec->start(gmxExec, runcommand);
+        PreparationExec->start(GMXEXEC, runcommand);
         PreparationExec->waitForFinished();
     }
     if (ui->BiomolIonsYES_radioButton_3->isChecked())
@@ -158,7 +150,7 @@ void GromacsPrep::on_RunPrepare_pushButton_clicked()
         QString ionsmdp = ExecDir() + "/template/ions.mdp";
         runcommand.clear();
         runcommand << "grompp" << "-f" << ionsmdp << "-c" << coordinate_out <<  "-o" << "ions.tpr" <<  "-p" << topology_out << "-maxwarn" << "100";
-        PreparationExec->start(gmxExec, runcommand);
+        PreparationExec->start(GMXEXEC, runcommand);
         PreparationExec->waitForFinished();
         runcommand.clear();
         runcommand <<"genion" << "-s" << "ions.tpr" << "-o"  << coordinate_out <<  "-p" <<  topology_out << "-pname" << ui->BiomolCation_lineEdit_2->text() << "-nname" << ui->BiomolAnions_lineEdit_2->text() ;
@@ -169,7 +161,7 @@ void GromacsPrep::on_RunPrepare_pushButton_clicked()
         {
             runcommand  <<"-conc" << ui->BiomolSaltConc_lineEdit_2->text();
         }
-        PreparationExec->start(gmxExec, runcommand);
+        PreparationExec->start(GMXEXEC, runcommand);
         PreparationExec->write("SOL \n");
        }
 }
@@ -230,8 +222,8 @@ void GromacsPrep::on_VEW_pushButton_clicked()
 
 void GromacsPrep::setGMX(QString gmxexec, QString gmxlib)
 {
-    gmxExec = gmxexec;
-    gmxLib = gmxlib;
+    ui->gmxexec->setText(gmxexec);
+    ui->gmxlib->setText(gmxlib);
 }
 
 void GromacsPrep::showEvent(QShowEvent *ev)

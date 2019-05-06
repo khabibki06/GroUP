@@ -7,6 +7,8 @@
 #include <QMessageBox>
 #include <QTextStream>
 #include <QProcess>
+#include <QRegExpValidator>
+#include <QMenu>
 
 namespace Ui {
 class packmolgui;
@@ -19,8 +21,10 @@ class packmolgui : public QWidget
 public:
     explicit packmolgui(QWidget *parent = 0);
     ~packmolgui();
+    void packmolgui::setPackmol(QString packmol);
 public slots:
     void ReadPackmolProcess();
+    void contexMenuRequest(const QPoint &pos);
 
 signals:
     //signal for call vmd using mainwindows
@@ -37,10 +41,17 @@ private slots:
 
     void on_view_pushButton_clicked();
 
+    void deleteSelectedMolecule();
+    void clearMolecules();
+
+
+
 private:
     Ui::packmolgui *ui;
     bool packmolgui::checkEmptyParameter(QString text, QString label);
     QProcess *packmolprocess;
+    void packmolgui::addMoleculesToTable(QStringList moleculesData);
+    QString packmolExec;
 };
 
 #endif // PACKMOLGUI_H

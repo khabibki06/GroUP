@@ -7,6 +7,8 @@
 #include <QTextStream>
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QDialog>
+#include <QDialogButtonBox>
 
 namespace Ui {
 class GromacsUP;
@@ -19,16 +21,23 @@ class GromacsUP : public QWidget
 public:
     explicit GromacsUP(QWidget *parent = 0);
     ~GromacsUP();
+    void GromacsUP::setGMXExec(QString gmxexec);
 
 
 public slots:
     void RunSimulationCommand();
     void ReadSimulationCommand();
     void StopSimulationCommand(int exitCode, QProcess::ExitStatus exitStatus);
+protected:
 
 signals:
     //view structure
     void viewStructureSignal(const QString text);
+    //view trajectory
+    void viewTrajectorySignal(const QString text, const QString trjname);
+    //view input file using builtin text editor
+    void viewInputFile(const QString filename);
+
 
 private slots:
 
@@ -62,6 +71,16 @@ private slots:
 
     void on_ViewOutputSimulation_pushButton_clicked();
 
+    void on_trj_pushButton_clicked();
+
+    void on_jobName_lineEdit_textChanged(const QString &arg1);
+
+    void on_jobName_lineEdit_textEdited(const QString &arg1);
+
+    void on_timeSteps_lineEdit_textChanged(const QString &arg1);
+
+    void on_checkpoint_toolButton_clicked();
+
 private:
     Ui::GromacsUP *ui;
     void GromacsUP::changeFileSimulationWidget();
@@ -73,10 +92,13 @@ private:
     void GromacsUP::DefaultSetting();
     QString GromacsUP::ExecDir();
     QProcess *exec;
-    QStringList RunGROMPP();
-    QStringList RunMdrun();
+    QStringList GromacsUP::RunGROMPP();
+    QStringList GromacsUP::RunConvertTpr();
+    QStringList GromacsUP::RunMdrun();
     bool GromacsUP::checkErrorMessage(QString text, QString label);
     QString GromacsUP::SpacingFilename(QString text);
+    void GromacsUP::calculateSimulationTime();
+    QString gmxExec; //setting gromacs Executable
 };
 
 #endif // GROMACSUP_H

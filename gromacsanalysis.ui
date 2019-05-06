@@ -49,7 +49,7 @@
      <property name="title">
       <string>Analysis</string>
      </property>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -127,7 +127,7 @@ ANALYSIS</string>
 GRAPH</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>30</x>
@@ -167,9 +167,9 @@ GRAPH</string>
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="trj_tab">
+   <widget class="QWidget" name="rmsd_tab">
     <attribute name="title">
-     <string>Trajectory</string>
+     <string>RMSD</string>
     </attribute>
    </widget>
   </widget>
@@ -183,7 +183,7 @@ GRAPH</string>
     </rect>
    </property>
   </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>80</x>

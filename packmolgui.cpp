@@ -6,12 +6,33 @@ packmolgui::packmolgui(QWidget *parent) :
     ui(new Ui::packmolgui)
 {
     ui->setupUi(this);
-    setWindowFlags(Qt::Drawer);
     //Process
     packmolprocess = new QProcess(this);
     packmolprocess->setProcessChannelMode(QProcess::MergedChannels);
     //read output packmol
     connect(packmolprocess,SIGNAL(readyRead()),this,SLOT(ReadPackmolProcess()));
+    ui->packmol->setVisible(0);
+    //REG VALIDATOR
+    ui->numbermol_lineEdit->setValidator(new QRegExpValidator(QRegExp("[1-9][0-9]*")));
+    ui->x_lineEdit_2->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->y_lineEdit_2->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->z_lineEdit_2->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->x_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->y_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    ui->z_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+     ui->tolerance_lineEdit->setValidator(new QRegExpValidator(QRegExp("[0-9]*.?[0-9]*")));
+    //set working directory
+    ui->workdir_lineEdit->setText(QDir::current().absolutePath());
+    //set table
+    QStringList tableHeaders;
+    tableHeaders << "molecules" << "numbers" << "constrain type" <<"constrain" << "extra parameter";
+    ui->tableWidget->setHorizontalHeaderLabels(tableHeaders);
+    ui->tableWidget->setStyleSheet("QTableView {selection-background-color: red;}");
+    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    //set pop up menu
+    ui->tableWidget->setContextMenuPolicy((Qt::CustomContextMenu));
+    //action when right click
+    connect(ui->tableWidget, SIGNAL(customContextMenuRequested(const QPoint &)),this,SLOT(contexMenuRequest(const QPoint &)));
 }
 
 packmolgui::~packmolgui()
@@ -66,13 +87,13 @@ void packmolgui::on_add_pushButton_clicked()
         ui->z_lineEdit_2->setFocus();
         return;
     }
-    QString molecules;
-    molecules = "structure " + ui->structure_lineEdit->text() + "\n" ;
-    molecules.append("number " + ui->numbermol_lineEdit->text() + " \n");
-    molecules.append(ui->constraint_comboBox->currentText() + " " + ui->x_lineEdit->text() + " " + ui->y_lineEdit->text() + " " + ui->z_lineEdit->text() + " ");
-    molecules.append(ui->x_lineEdit_2->text() + " " + ui->y_lineEdit_2->text() + " " + ui->z_lineEdit_2->text() + " \n");
-    molecules.append("end structure \n \n");
-    ui->addedmolecules_textEdit->append(molecules);
+    QStringList moleculesData;
+    moleculesData << ui->structure_lineEdit->text();
+    moleculesData << ui->numbermol_lineEdit->text();
+    moleculesData << ui->constraint_comboBox->currentText();
+    moleculesData << ui->x_lineEdit->text() + " " + ui->y_lineEdit->text() + " " + ui->z_lineEdit->text() + " " +  ui->x_lineEdit_2->text() + " " +  ui->y_lineEdit_2->text() +" " + ui->z_lineEdit_2->text();
+    moleculesData << " ";
+    addMoleculesToTable(moleculesData);
     ui->structure_lineEdit->clear();
     ui->numbermol_lineEdit->clear();
 }
@@ -97,7 +118,7 @@ void packmolgui::on_run_pushButton_clicked()
         ui->jobname_lineEdit->setFocus();
         return;
     }
-    if (ui->addedmolecules_textEdit->toPlainText().isEmpty())
+    if (ui->tableWidget->rowCount() == 0)
     {
         QMessageBox msgBox;
         msgBox.setIcon(QMessageBox::Critical);
@@ -116,14 +137,22 @@ void packmolgui::on_run_pushButton_clicked()
         out << "output " << ui->jobname_lineEdit->text() + ".pdb" << endl;
         out << "filetype pdb" <<endl;
         out << "add_box_sides 1.0 \n" << endl;
-        out << ui->addedmolecules_textEdit->toPlainText();
+//        out << ui->addedmolecules_textEdit->toPlainText();
+        for (int i = 0; i<ui->tableWidget->rowCount();i++)
+        {
+            out << "structure " << ui->tableWidget->item(i,0)->text() << endl;
+            out << "number " << ui->tableWidget->item(i,1)->text() <<endl;
+            out << ui->tableWidget->item(i,2)->text() + " " + ui->tableWidget->item(i,3)->text() << endl;
+            out << "end structure" << endl <<endl;
+        }
+
         file.close();
     }
     QStringList command;
 //WIN32
-    command << "/C" << "packmol.exe < " << ui->jobname_lineEdit->text() + ".inp";
+    command << "/C" << packmolExec << "<" << ui->jobname_lineEdit->text() + ".inp";
     packmolprocess->start("cmd.exe",command);
-    packmolprocess->waitForFinished();
+//    packmolprocess->waitForFinished();
 }
 void packmolgui::ReadPackmolProcess()
 {
@@ -134,3 +163,41 @@ void packmolgui::on_view_pushButton_clicked()
 {
     emit viewStructureSignal(ui->jobname_lineEdit->text() + ".pdb");
 }
+
+void packmolgui::setPackmol(QString packmol)
+{
+    ui->packmol->setText(packmol);
+}
+
+void packmolgui::addMoleculesToTable(QStringList moleculesData)
+{
+    int rowcount = ui->tableWidget->rowCount();
+    ui->tableWidget->insertRow(rowcount);
+    for (int i = 0; i<moleculesData.size();i++)
+    {
+        ui->tableWidget->setItem(rowcount,i,new QTableWidgetItem(moleculesData.value(i)));
+    }
+}
+
+
+void packmolgui::contexMenuRequest(const QPoint &pos)
+{
+    QMenu menu(tr("menu"), this);
+    menu.setAttribute(Qt::WA_DeleteOnClose);
+    menu.addAction("Delete Selected Molecules", this, SLOT(deleteSelectedMolecule()));
+    menu.addSeparator();
+    menu.addAction("Clear All Molecules", this, SLOT(clearMolecules()));
+    menu.exec(ui->tableWidget->mapToGlobal(pos));
+}
+
+void packmolgui::deleteSelectedMolecule()
+{
+    int row = ui->tableWidget->currentRow();
+    ui->tableWidget->removeRow(row);
+}
+
+void packmolgui::clearMolecules()
+{
+     ui->tableWidget->setRowCount(0);
+}
+
